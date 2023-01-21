@@ -54,6 +54,24 @@ button {
   align-self: center;
 }
 
+.screen-text {
+  font-size: 40px;
+  font-weight: 500;
+  align-self: flex-end;
+  margin: 10px;
+  background-color: inherit;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.memory {
+  background-color: inherit;
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+  
+}
+
 .clear-delete {
   display: flex;
   justify-content: center;
