@@ -29,28 +29,30 @@ function operate(x, y, operator) {
 
 function operandAction(e) {
   if (screen.textContent.includes(".") && e.target.textContent === ".") {
+  } else if (screen.textContent === "" && e.target.textContent === ".") {
+     screen.textContent = "0.";
   } else {
-      if (screen.textContent === "Impossibru!") clearAll();
+    if (screen.textContent === "Impossibru!") clearAll();
 
-      if (screen.textContent === "0") {
-        screen.textContent = "";
-      }
+    if (screen.textContent === "0" && e.target.textContent !== ".") {
+      screen.textContent = "";
+    }
 
-      if (clearScreen === false) {
-        if (nextOperand === false) {
-          screen.textContent += e.target.textContent;
-          firstOperand = screen.textContent;
-        } else {
-          screen.textContent += e.target.textContent;
-          secondOperand = screen.textContent;
-        }
+    if (clearScreen === false) {
+      if (nextOperand === false) {
+        screen.textContent += e.target.textContent;
+        firstOperand = screen.textContent;
       } else {
-        screen.textContent = "";
-        screen.textContent = e.target.textContent;
+        screen.textContent += e.target.textContent;
         secondOperand = screen.textContent;
-        clearScreen = false;
       }
-  }
+    } else {
+      screen.textContent = "";
+      screen.textContent = e.target.textContent;
+      secondOperand = screen.textContent;
+      clearScreen = false;
+    }
+}
 }
 
 function operatorAction(e) {
@@ -105,6 +107,7 @@ function clearAll() {
   operatorString = null;
   screen.textContent = "";
   memory.textContent = "";
+  screen.textContent = "0";
 }
 
 let firstOperand = 0;
