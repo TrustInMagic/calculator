@@ -27,6 +27,69 @@ function operate(x, y, operator) {
   }
 }
 
+function operandAction(e) {
+  if (screen.textContent.includes(".") && e.target.textContent === ".") {
+  } else {
+      if (screen.textContent === "Impossibru!") clearAll();
+
+      if (screen.textContent === "0") {
+        screen.textContent = "";
+      }
+
+      if (clearScreen === false) {
+        if (nextOperand === false) {
+          screen.textContent += e.target.textContent;
+          firstOperand = screen.textContent;
+        } else {
+          screen.textContent += e.target.textContent;
+          secondOperand = screen.textContent;
+        }
+      } else {
+        screen.textContent = "";
+        screen.textContent = e.target.textContent;
+        secondOperand = screen.textContent;
+        clearScreen = false;
+      }
+  }
+}
+
+function operatorAction(e) {
+  if (screen.textContent === "Impossibru!") clearAll();
+  nextOperand = true;
+  clearScreen = true;
+  operatorString = `${e.target.value}`;
+  firstOperand = screen.textContent;
+  memory.textContent = `${firstOperand} ${operatorString}`;
+}
+
+function equalsAction(e) {
+  if (operatorString !== null) {
+    result = operate(firstOperand, secondOperand, operatorString);
+
+    if (secondOperand === "0" && operatorString === "/") {
+      result = "Impossibru!";
+      screen.textContent = result;
+      memory.textContent = "";
+    } else {
+      memory.textContent = `${firstOperand} ${operatorString} ${secondOperand} =`;
+      screen.textContent = result;
+    }   
+  }
+}
+
+function delAction() {
+  if (operatorString === null) {
+    screenTextArr = screen.textContent.split("");
+    screenTextArr.pop();
+    screen.textContent = screenTextArr.join(""); 
+  } else {
+    screenTextArr = screen.textContent.split("");
+    screenTextArr.pop();
+    screen.textContent = screenTextArr.join("");
+    secondOperand = screen.textContent;
+  }
+}
+
 function clearAll() {
   firstOperand = 0;
   secondOperand = 0;
@@ -52,69 +115,10 @@ let del = document.querySelector(".delete");
 
 
 
-regularButtons.forEach(button => button.addEventListener("click", (e) => {
-  if (screen.textContent.includes(".") && e.target.textContent === ".") {
-  } else {
-      if (screen.textContent === "Impossibru!") clearAll();
-
-      if (screen.textContent === "0") {
-        screen.textContent = "";
-      }
-
-      if (clearScreen === false) {
-        if (nextOperand === false) {
-          screen.textContent += e.target.textContent;
-          firstOperand = screen.textContent;
-        } else {
-          screen.textContent += e.target.textContent;
-          secondOperand = screen.textContent;
-        }
-      } else {
-        screen.textContent = "";
-        screen.textContent = e.target.textContent;
-        secondOperand = screen.textContent;
-        clearScreen = false;
-      }
-  }
-}))
-
-operators.forEach(operator => operator.addEventListener("click", (e) => {
-  if (screen.textContent === "Impossibru!") clearAll();
-  nextOperand = true;
-  clearScreen = true;
-  operatorString = `${e.target.value}`;
-  firstOperand = screen.textContent;
-  memory.textContent = `${firstOperand} ${operatorString}`
-}))
-
-equals.addEventListener("click", (e) => {
-  if (operatorString !== null) {
-    result = operate(firstOperand, secondOperand, operatorString);
-
-    if (secondOperand === "0" && operatorString === "/") {
-      result = "Impossibru!";
-      screen.textContent = result;
-      memory.textContent = "";
-    } else {
-      memory.textContent = `${firstOperand} ${operatorString} ${secondOperand} =`;
-      screen.textContent = result;
-    }   
-  }
-})
-
-del.addEventListener("click", () => {
-  if (operatorString === null) {
-    screenTextArr = screen.textContent.split("");
-    screenTextArr.pop();
-    screen.textContent = screenTextArr.join(""); 
-  } else {
-    screenTextArr = screen.textContent.split("");
-    screenTextArr.pop();
-    screen.textContent = screenTextArr.join("");
-    secondOperand = screen.textContent;
-  }
-})
-
-clear.addEventListener("click", () => clearAll())
+regularButtons.forEach(button => button.addEventListener("click", (e) => operandAction(e)))
+operators.forEach(operator => operator.addEventListener("click", (e) => operatorAction(e)))
+equals.addEventListener("click", (e) => equalsAction(e));
+del.addEventListener("click", () => delAction());
+clear.addEventListener("click", () => clearAll());
 
 
