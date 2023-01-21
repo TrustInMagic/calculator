@@ -1,5 +1,5 @@
 function add(x, y) {
-  return x + y;
+  return +x + +y;
 }
 
 function subtract(x, y) {
@@ -53,25 +53,28 @@ let del = document.querySelector(".delete");
 
 
 regularButtons.forEach(button => button.addEventListener("click", (e) => {
-  if (screen.textContent === "Impossibru!") clearAll();
-
-  if (screen.textContent === "0") {
-    screen.textContent = "";
-  }
-
-  if (clearScreen === false) {
-    if (nextOperand === false) {
-      screen.textContent += e.target.textContent;
-      firstOperand = screen.textContent;
-    } else {
-      screen.textContent += e.target.textContent;
-      secondOperand = screen.textContent;
-    }
+  if (screen.textContent.includes(".") && e.target.textContent === ".") {
   } else {
-    screen.textContent = "";
-    screen.textContent = e.target.textContent;
-    secondOperand = screen.textContent;
-    clearScreen = false;
+      if (screen.textContent === "Impossibru!") clearAll();
+
+      if (screen.textContent === "0") {
+        screen.textContent = "";
+      }
+
+      if (clearScreen === false) {
+        if (nextOperand === false) {
+          screen.textContent += e.target.textContent;
+          firstOperand = screen.textContent;
+        } else {
+          screen.textContent += e.target.textContent;
+          secondOperand = screen.textContent;
+        }
+      } else {
+        screen.textContent = "";
+        screen.textContent = e.target.textContent;
+        secondOperand = screen.textContent;
+        clearScreen = false;
+      }
   }
 }))
 
@@ -106,3 +109,5 @@ del.addEventListener("click", () => {
 })
 
 clear.addEventListener("click", () => clearAll())
+
+
