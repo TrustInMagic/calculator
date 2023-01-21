@@ -103,9 +103,16 @@ equals.addEventListener("click", (e) => {
 })
 
 del.addEventListener("click", () => {
-  screenTextArr = screen.textContent.split("");
-  screenTextArr.pop();
-  screen.textContent = screenTextArr.join("");  
+  if (operatorString === null) {
+    screenTextArr = screen.textContent.split("");
+    screenTextArr.pop();
+    screen.textContent = screenTextArr.join(""); 
+  } else {
+    screenTextArr = screen.textContent.split("");
+    screenTextArr.pop();
+    screen.textContent = screenTextArr.join("");
+    secondOperand = screen.textContent;
+  }
 })
 
 clear.addEventListener("click", () => clearAll())
