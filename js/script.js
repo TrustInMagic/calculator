@@ -54,15 +54,24 @@ function operandAction(e) {
 }
 
 function operatorAction(e) {
-  if (screen.textContent === "Impossibru!") clearAll();
-  nextOperand = true;
-  clearScreen = true;
-  operatorString = `${e.target.value}`;
-  firstOperand = screen.textContent;
-  memory.textContent = `${firstOperand} ${operatorString}`;
+  if (operatorString === null) {
+    nextOperand = true;
+    clearScreen = true;
+    operatorString = `${e.target.value}`;
+    firstOperand = screen.textContent;
+    memory.textContent = `${firstOperand} ${operatorString}`;
+  } else {
+    nextOperand = true;
+    clearScreen = true;
+    let partialResult = operate(firstOperand, secondOperand, operatorString);
+    operatorString = `${e.target.value}`;
+    screen.textContent = partialResult;
+    firstOperand = screen.textContent;
+    memory.textContent = `${partialResult} ${operatorString}`
+  }
 }
 
-function equalsAction(e) {
+function equalsAction() {
   if (operatorString !== null) {
     result = operate(firstOperand, secondOperand, operatorString);
 
@@ -117,7 +126,7 @@ let del = document.querySelector(".delete");
 
 regularButtons.forEach(button => button.addEventListener("click", (e) => operandAction(e)))
 operators.forEach(operator => operator.addEventListener("click", (e) => operatorAction(e)))
-equals.addEventListener("click", (e) => equalsAction(e));
+equals.addEventListener("click", (e) => equalsAction());
 del.addEventListener("click", () => delAction());
 clear.addEventListener("click", () => clearAll());
 
