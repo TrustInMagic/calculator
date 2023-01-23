@@ -144,10 +144,11 @@ function getButtonSymbolOperator(e) {
 
   if (!keyPressed) {
     buttonSymbol = e.target.value;
-  } else buttonSymbol = e.textContent
+  } else buttonSymbol = e.value
 
   return buttonSymbol;
 }
+
 
 let firstOperand = 0;
 let secondOperand = 0;
@@ -167,7 +168,6 @@ let zero = document.querySelector(".zero");
 let clear = document.querySelector(".clear");
 let del = document.querySelector(".delete");
 let squareButtons = document.querySelectorAll(".buttons button");
-
 
 regularButtons.forEach(button => button.addEventListener("click", (e) => operandAction(e)))
 operators.forEach(operator => operator.addEventListener("click", (e) => operatorAction(e)))
@@ -200,5 +200,5 @@ window.addEventListener("keydown", (e) => {
     key.classList.add("button-press");
     equalsAction();
     keyPressed = false;
-  }
+  } 
 })
