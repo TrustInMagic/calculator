@@ -105,15 +105,30 @@ button {
 
 .buttons button:hover {
   background-color: rgb(191, 255, 255);
-  transition: .3s;
+  transition: .2s;
 }
 
 .clear:hover {
   background-color: rgb(255, 113, 113);
-  transition: .3s;
+  transition: .2s;
 }
 
 .delete:hover {
   background-color: rgb(119, 119, 254);
-  transition: .3s;
+  transition: .2s;
+}
+
+.button-press {
+  background-color: rgb(119, 252, 252) !important;
+  transition: .2s;
+}
+
+.clear-press {
+  background-color: rgb(252, 68, 68) !important;
+  transition: .2s;
+}
+
+.del-press {
+  background-color: rgb(65, 65, 251) !important;
+  transition: .2s;
 }

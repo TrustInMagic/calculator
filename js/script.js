@@ -28,27 +28,31 @@ function operate(x, y, operator) {
 }
 
 function operandAction(e) {
-  if (screen.textContent.includes(".") && e.target.textContent === ".") {
-  } else if (screen.textContent === "" && e.target.textContent === ".") {
+  let buttonSymbol = getButtonSymbolRegular(e);
+  
+
+  //avoid using multiple "."s
+  if (screen.textContent.includes(".") && buttonSymbol === ".") {
+  } else if (screen.textContent === "" && buttonSymbol === ".") {
      screen.textContent = "0.";
   } else {
     if (screen.textContent === "Impossibru!") clearAll();
 
-    if (screen.textContent === "0" && e.target.textContent !== ".") {
+    if (screen.textContent === "0" && buttonSymbol !== ".") {
       screen.textContent = "";
     }
 
     if (clearScreen === false) {
       if (nextOperand === false) {
-        screen.textContent += e.target.textContent;
+        screen.textContent += buttonSymbol;
         firstOperand = screen.textContent;
       } else {
-        screen.textContent += e.target.textContent;
+        screen.textContent += buttonSymbol;
         secondOperand = screen.textContent;
       }
     } else {
       screen.textContent = "";
-      screen.textContent = e.target.textContent;
+      screen.textContent = buttonSymbol
       secondOperand = screen.textContent;
       clearScreen = false;
     }
@@ -56,17 +60,19 @@ function operandAction(e) {
 }
 
 function operatorAction(e) {
+  let buttonSymbol = getButtonSymbolOperator(e);
+ 
   if (operatorString === null) {
     nextOperand = true;
     clearScreen = true;
-    operatorString = `${e.target.value}`;
+    operatorString = `${buttonSymbol}`;
     firstOperand = screen.textContent;
     memory.textContent = `${firstOperand} ${operatorString}`;
   } else {
     nextOperand = true;
     clearScreen = true;
     let partialResult = operate(firstOperand, secondOperand, operatorString);
-    operatorString = `${e.target.value}`;
+    operatorString = `${buttonSymbol}`;
     screen.textContent = partialResult;
     firstOperand = screen.textContent;
     memory.textContent = `${partialResult} ${operatorString}`
@@ -74,6 +80,7 @@ function operatorAction(e) {
 }
 
 function equalsAction() {
+  equalsUsed = true;
   if (operatorString !== null) {
     result = operate(firstOperand, secondOperand, operatorString);
 
@@ -89,15 +96,24 @@ function equalsAction() {
 }
 
 function delAction() {
-  if (operatorString === null) {
-    screenTextArr = screen.textContent.split("");
-    screenTextArr.pop();
-    screen.textContent = screenTextArr.join(""); 
+  if (equalsUsed === true) {
+       screenTextArr = screen.textContent.split("");
+       screenTextArr.pop();
+       let toBeDisplayed = screenTextArr.join(""); 
+       clearAll();
+       screen.textContent = toBeDisplayed;
+       firstOperand = screen.textContent;
   } else {
-    screenTextArr = screen.textContent.split("");
-    screenTextArr.pop();
-    screen.textContent = screenTextArr.join("");
-    secondOperand = screen.textContent;
+    if (operatorString === null) {
+       screenTextArr = screen.textContent.split("");
+       screenTextArr.pop();
+       screen.textContent = screenTextArr.join(""); 
+     } else {
+       screenTextArr = screen.textContent.split("");
+       screenTextArr.pop();
+       screen.textContent = screenTextArr.join("");
+       secondOperand = screen.textContent;
+    }
   }
 }
 
@@ -105,9 +121,32 @@ function clearAll() {
   firstOperand = 0;
   secondOperand = 0;
   operatorString = null;
+  equalsUsed = false;
   screen.textContent = "";
   memory.textContent = "";
   screen.textContent = "0";
+}
+
+//using this function to help with keyboard implementation
+function getButtonSymbolRegular(e) {
+  let buttonSymbol = null;
+
+  if (!keyPressed) {
+    buttonSymbol = e.target.textContent;
+  } else buttonSymbol = e.textContent;
+
+  return buttonSymbol;
+}
+
+//using this function to help with keyboard implementation
+function getButtonSymbolOperator(e) {
+  let buttonSymbol = null;
+
+  if (!keyPressed) {
+    buttonSymbol = e.target.value;
+  } else buttonSymbol = e.textContent
+
+  return buttonSymbol;
 }
 
 let firstOperand = 0;
@@ -115,6 +154,9 @@ let secondOperand = 0;
 let operatorString = null;
 let nextOperand = false;
 let clearScreen = false;
+let equalsUsed = false;
+//using this variable to help with keyboard implementation
+let keyPressed = false;
 
 let screen = document.querySelector(".screen-text");
 let regularButtons = document.querySelectorAll(".regular");
@@ -124,13 +166,39 @@ let equals = document.querySelector(".equals");
 let zero = document.querySelector(".zero");
 let clear = document.querySelector(".clear");
 let del = document.querySelector(".delete");
-
+let squareButtons = document.querySelectorAll(".buttons button");
 
 
 regularButtons.forEach(button => button.addEventListener("click", (e) => operandAction(e)))
 operators.forEach(operator => operator.addEventListener("click", (e) => operatorAction(e)))
-equals.addEventListener("click", (e) => equalsAction());
+equals.addEventListener("click", () => equalsAction());
 del.addEventListener("click", () => delAction());
 clear.addEventListener("click", () => clearAll());
 
+squareButtons.forEach(button => button.addEventListener("mousedown", (e) => e.target.classList.add("button-press")));
+squareButtons.forEach(button => button.addEventListener("transitionend", (e) => e.target.classList.remove("button-press")));
+clear.addEventListener("mousedown", (e) => e.target.classList.add("clear-press"));
+clear.addEventListener("transitionend", (e) => e.target.classList.remove("clear-press"));
+del.addEventListener("mousedown", (e) => e.target.classList.add("del-press"));
+del.addEventListener("transitionend", (e) => e.target.classList.remove("del-press"));
 
+//keyboard implementation
+window.addEventListener("keydown", (e) => {
+  let key = document.querySelector(`button[data-key="${e.key}"]`);
+  if (key.classList.contains("regular")) {
+    keyPressed = true;
+    key.classList.add("button-press");
+    operandAction(key);
+    keyPressed = false;
+  } else if (key.classList.contains("operator")) {
+    keyPressed = true;
+    key.classList.add("button-press");
+    operatorAction(key);
+    keyPressed = false;
+  } else if (key.classList.contains("equals")) {
+    keyPressed = true;
+    key.classList.add("button-press");
+    equalsAction();
+    keyPressed = false;
+  }
+})
